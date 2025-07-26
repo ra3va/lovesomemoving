@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from 'react';
 import Link from "next/link";
 import Image from "next/image";
 import Script from 'next/script';
@@ -8,137 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingHearts from "@/components/FloatingHearts";
 
-// Quiz questions and options configuration
-const quizSteps = [
-  {
-    question: "What type of property are you moving from?",
-    key: "propertyType",
-    options: ["Single Family House", "Apartment (1-3 floors)", "High-rise Apartment (4+ floors)", "Townhouse/Duplex", "Condo/Co-op"],
-    type: "radio",
-  },
-  {
-    question: "What size is your move?",
-    key: "moveSize",
-    options: ["Studio", "1 Bedroom", "2 Bedrooms", "3+ Bedrooms", "Office/Commercial"],
-    type: "radio",
-  },
-  {
-    question: "Do you have any specialty items?",
-    description: "Such as pianos, safes, or large antiques.",
-    key: "specialtyItems",
-    options: ["Piano", "Large Safe (300+ lbs)", "Artwork/Antiques", "None"],
-    type: "checkbox",
-  },
-  {
-    question: "What level of packing service do you need?",
-    key: "packingService",
-    options: ["Full Service Packing", "Partial (Fragiles Only)", "No Packing Needed"],
-    type: "radio",
-  },
-  {
-    question: "Are there stairs involved?",
-    key: "stairs",
-    options: ["Elevator available", "1-2 flights of stairs", "3+ flights of stairs", "No stairs/ground floor"],
-    type: "radio",
-  },
-];
-
 export default function Home() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
-  const [isCompleted, setIsCompleted] = useState(false);
-
-  const handleAnswer = (key: string, value: string) => {
-    setAnswers(prev => {
-      if (quizSteps[currentStep].type === 'checkbox') {
-        const existing = (prev[key] as string[]) || [];
-        if (existing.includes(value)) {
-          return { ...prev, [key]: existing.filter((item: string) => item !== value) };
-        }
-        return { ...prev, [key]: [...existing, value] };
-      }
-      return { ...prev, [key]: value };
-    });
-  };
-
-  const nextStep = () => {
-    if (currentStep < quizSteps.length) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const prevStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const formData = new FormData(e.target as HTMLFormElement);
-    
-    // Format quiz answers for email
-    const formatAnswers = (answers: Record<string, string | string[]>) => {
-      return Object.entries(answers)
-        .map(([key, value]) => {
-          const questionMap: Record<string, string> = {
-            propertyType: 'Property Type',
-            moveSize: 'Move Size',
-            specialtyItems: 'Specialty Items',
-            packingService: 'Packing Service',
-            stairs: 'Stairs/Access'
-          };
-          const questionTitle = questionMap[key] || key;
-          const answerValue = Array.isArray(value) ? value.join(', ') : value;
-          return `${questionTitle}: ${answerValue}`;
-        })
-        .join('\n');
-    };
-
-    // Prepare Web3Forms submission
-    const web3FormData = new FormData();
-    web3FormData.append('access_key', 'ad2a1a79-8a7d-493c-bab9-4bbaa1b61106');
-    web3FormData.append('email', 'themindsetmarketer@gmail.com');
-    web3FormData.append('subject', '🏠 New Moving Quote Request - Lovesome Moving');
-    web3FormData.append('from_name', formData.get('name') as string);
-    web3FormData.append('message', `
-NEW MOVING QUOTE REQUEST
-
-CUSTOMER INFORMATION:
-Name: ${formData.get('name')}
-Email: ${formData.get('email')}
-Phone: ${formData.get('phone')}
-Moving From: ${formData.get('movingFrom')}
-Moving To: ${formData.get('movingTo')}
-
-MOVING REQUIREMENTS:
-${formatAnswers(answers)}
-
-RESPONSE PROMISE: Customer expects call within 30 minutes!
-
-Generated: ${new Date().toLocaleString()}
-    `);
-
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: web3FormData
-      });
-
-      if (response.ok) {
-        setIsCompleted(true);
-      } else {
-        alert('There was an error submitting your request. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('There was an error submitting your request. Please try again.');
-    }
-  };
-  
-  const progressPercentage = (currentStep / (quizSteps.length + 1)) * 100;
-
   return (
     <div className="min-h-screen bg-white">
       <Header />
@@ -252,132 +119,104 @@ Generated: ${new Date().toLocaleString()}
                     <span className="text-6xl opacity-70 transform rotate-12">&#10084;</span>
                     <span className="absolute top-8 -left-3 text-4xl opacity-80 transform -rotate-12">&#10084;</span>
                   </div>
-              {/* Interactive Quiz */}
+              {/* Quote Form */}
               <div>
-                {!isCompleted ? (
-                  <>
-                    <h3 className="text-xl lg:text-2xl font-bold text-center mb-1" style={{color: '#C75B9B'}}>
-                      Get Your Free Quote
-                    </h3>
-                    <p className="text-gray-600 text-center mb-4 text-sm">Answer a few quick questions for a personalized estimate</p>
-                    
-                    {/* Progress Bar */}
-                    <div className="mb-6">
-                      <div className="relative pt-1">
-                        <div className="overflow-hidden h-2 mb-2 text-xs flex rounded bg-pink-200">
-                          <div style={{ width: `${progressPercentage}%`, backgroundColor: '#E91E63' }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-500"></div>
-                        </div>
-                        <p className="text-xs font-semibold text-right" style={{color: '#C75B9B'}}>Step {currentStep + 1} of {quizSteps.length + 1}</p>
-                      </div>
+                <h3 className="text-xl lg:text-2xl font-bold text-center mb-1" style={{color: '#C75B9B'}}>
+                  Free Moving Estimate
+                </h3>
+                <p className="text-gray-600 text-center mb-4 text-sm">Get your personalized quote in minutes</p>
+                
+                <form className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter your full name"
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent placeholder-gray-500"
+                      />
                     </div>
-
-                    {/* Quiz Content */}
-                    <div className="min-h-[300px]">
-                      {currentStep < quizSteps.length && (
-                        <div>
-                          <h2 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">{quizSteps[currentStep].question}</h2>
-                          {quizSteps[currentStep].description && <p className="text-gray-600 mb-4 text-sm">{quizSteps[currentStep].description}</p>}
-                          <div className="space-y-2">
-                            {quizSteps[currentStep].options.map(option => (
-                              <button
-                                key={option}
-                                onClick={() => handleAnswer(quizSteps[currentStep].key, option)}
-                                className={`w-full text-left p-3 rounded-lg border-2 transition-all text-sm font-semibold ${
-                                  (answers[quizSteps[currentStep].key] || []).includes(option) || answers[quizSteps[currentStep].key] === option
-                                    ? 'text-white shadow-lg'
-                                    : 'text-gray-800 bg-white hover:bg-gray-100'
-                                }`}
-                                style={{
-                                  backgroundColor: ((answers[quizSteps[currentStep].key] || []).includes(option) || answers[quizSteps[currentStep].key] === option) ? '#C75B9B' : undefined,
-                                  borderColor: '#C75B9B'
-                                }}
-                              >
-                                {option}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {currentStep === quizSteps.length && (
-                        <div>
-                          <h2 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">Almost there!</h2>
-                          <p className="text-gray-600 mb-4 text-sm">Enter your details to receive your personalized quote.</p>
-                          <form className="space-y-3" onSubmit={handleSubmit}>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Full Name *</label>
-                              <input type="text" name="name" placeholder="Enter your full name" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800"/>
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Email Address *</label>
-                              <input type="email" name="email" placeholder="your.email@example.com" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800"/>
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Phone Number *</label>
-                              <input type="tel" name="phone" placeholder="(___) ___-____" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800"/>
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Moving From *</label>
-                              <input type="text" name="movingFrom" placeholder="Full address" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800"/>
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Moving To *</label>
-                              <input type="text" name="movingTo" placeholder="Full address" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800"/>
-                            </div>
-                            
-                            <button
-                              type="submit"
-                              className="w-full mt-4 px-4 py-2 rounded-lg text-white font-bold hover:opacity-90 transition-all shadow-lg text-sm"
-                              style={{backgroundColor: '#E91E63'}}
-                            >
-                              Get Quote
-                            </button>
-                          </form>
-                        </div>
-                      )}
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Phone Number *
+                      </label>
+                      <input
+                        type="tel"
+                        placeholder="(___) ___-____"
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent placeholder-gray-500"
+                      />
                     </div>
-
-                    {/* Navigation Buttons */}
-                    <div className="flex justify-between items-center mt-6">
-                      <button
-                        onClick={prevStep}
-                        disabled={currentStep === 0}
-                        className="px-4 py-2 rounded-lg font-bold hover:opacity-90 transition-all border-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                        style={{borderColor: '#C75B9B', color: '#C75B9B'}}
-                      >
-                        Back
-                      </button>
-                      {currentStep < quizSteps.length ? (
-                        <button
-                          onClick={nextStep}
-                          className="px-4 py-2 rounded-lg text-white font-bold hover:opacity-90 transition-all shadow-lg text-sm"
-                          style={{backgroundColor: '#E91E63'}}
-                        >
-                          Next
-                        </button>
-                      ) : (
-                        <div className="px-4 py-2 text-sm text-gray-600">
-                          Complete form above ↑
-                        </div>
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-center min-h-[300px] flex flex-col justify-center items-center">
-                    <span className="text-5xl mb-4">🎉</span>
-                    <h2 className="text-2xl font-bold mb-4" style={{color: '#C75B9B'}}>Thank You!</h2>
-                    <p className="text-sm text-gray-700 mb-6 max-w-md">
-                      Your moving profile is complete! We&apos;ve received your information and will contact you with a personalized, no-obligation quote within the next 30 minutes.
-                    </p>
-                    <button 
-                      onClick={() => {setCurrentStep(0); setIsCompleted(false); setAnswers({});}}
-                      className="px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-all border-2 text-sm" 
-                      style={{borderColor: '#C75B9B', color: '#C75B9B'}}
-                    >
-                      Start New Quote
-                    </button>
                   </div>
-                )}
+                  
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="your.email@example.com"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent placeholder-gray-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Preferred Move Date
+                    </label>
+                    <input
+                      type="date"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent text-gray-500"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Moving From *
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Full address"
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent placeholder-gray-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Moving To *
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Full address"
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent placeholder-gray-500"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Additional Details
+                    </label>
+                    <textarea
+                      placeholder="Tell us about your move (stairs, heavy items, etc.)"
+                      rows={2}
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none placeholder-gray-500"
+                    ></textarea>
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    className="w-full py-3 rounded-lg text-white font-semibold hover:opacity-90 transition-all shadow-lg text-sm"
+                    style={{backgroundColor: '#E91E63'}}
+                  >
+                    ⭐ Get My Free Quote
+                  </button>
+                  
+                  <p className="text-xs text-gray-500 text-center">
+                    * Required fields. We&apos;ll contact you within 30 minutes!
+                  </p>
+                </form>
               </div>
             </div>
             </div>
