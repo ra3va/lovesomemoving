@@ -214,7 +214,7 @@ export default function Home() {
                   </button>
                   
                   <p className="text-xs text-gray-500 text-center">
-                    * Required fields. We'll contact you within 30 minutes!
+                    * Required fields. We&apos;ll contact you within 30 minutes!
                   </p>
                 </form>
               </div>

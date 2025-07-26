@@ -38,13 +38,13 @@ const quizSteps = [
 
 export default function QuizPage() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
   const [isCompleted, setIsCompleted] = useState(false);
 
-  const handleAnswer = (key: string, value: any) => {
+  const handleAnswer = (key: string, value: string) => {
     setAnswers(prev => {
       if (quizSteps[currentStep].type === 'checkbox') {
-        const existing = prev[key] || [];
+        const existing = (prev[key] as string[]) || [];
         if (existing.includes(value)) {
           return { ...prev, [key]: existing.filter((item: string) => item !== value) };
         }
@@ -90,7 +90,7 @@ export default function QuizPage() {
                 height={400}
                 className="w-96 h-96"
               />
-              <h1 className="text-4xl font-bold mt-4" style={{color: '#C75B9B'}}>Let's Plan Your Perfect Move</h1>
+              <h1 className="text-4xl font-bold mt-4" style={{color: '#C75B9B'}}>Let&apos;s Plan Your Perfect Move</h1>
               <p className="text-lg text-gray-700 mt-2">Answer a few quick questions to get a personalized estimate.</p>
             </div>
 
@@ -203,7 +203,7 @@ export default function QuizPage() {
                   <span className="text-7xl mb-4">🎉</span>
                   <h2 className="text-3xl font-bold mb-4" style={{color: '#C75B9B'}}>Thank You!</h2>
                   <p className="text-lg text-gray-700 mb-6 max-w-md">
-                    Your moving profile is complete! We've received your information and will contact you with a personalized, no-obligation quote within the next 30 minutes.
+                    Your moving profile is complete! We&apos;ve received your information and will contact you with a personalized, no-obligation quote within the next 30 minutes.
                   </p>
                   <Link href="/">
                     <button className="px-8 py-3 rounded-lg font-bold hover:opacity-90 transition-all border-2 text-lg" style={{borderColor: '#C75B9B', color: '#C75B9B'}}>
