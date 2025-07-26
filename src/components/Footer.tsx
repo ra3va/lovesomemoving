@@ -91,6 +91,17 @@ export default function Footer() {
               <p className="text-purple-200 text-sm">
                 © 2024 Lovesome Moving Services. All rights reserved.
               </p>
+              <p className="text-purple-300 text-xs mt-1">
+                Imagined & Manifested by{" "}
+                <a 
+                  href="https://fortunatuspurse.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors underline decoration-dotted"
+                >
+                  Fortunatus Purse
+                </a>
+              </p>
             </div>
             <div className="flex space-x-6">
               <Link href="#" className="text-purple-200 hover:text-white text-sm transition-colors">
