@@ -99,7 +99,7 @@ export default function Home() {
     // Prepare Web3Forms submission
     const web3FormData = new FormData();
     web3FormData.append('access_key', 'ad2a1a79-8a7d-493c-bab9-4bbaa1b61106');
-    web3FormData.append('email', 'themindsetmarketer@gmail.com');
+    web3FormData.append('email', 'lovesomemovers@gmail.com');
     web3FormData.append('subject', '🏠 New Moving Quote Request - Lovesome Moving');
     web3FormData.append('from_name', formData.get('name') as string);
     web3FormData.append('message', `
