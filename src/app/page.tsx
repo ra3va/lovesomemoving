@@ -111,9 +111,14 @@ Email: ${formData.get('email')}
 Phone: ${formData.get('phone')}
 Moving From: ${formData.get('movingFrom')}
 Moving To: ${formData.get('movingTo')}
+Preferred Date: ${formData.get('preferredDate')}
+Alternative Date: ${formData.get('alternativeDate') || 'Not provided'}
 
 MOVING REQUIREMENTS:
 ${formatAnswers(answers)}
+
+ADDITIONAL NOTES:
+${formData.get('notes') || 'None provided'}
 
 RESPONSE PROMISE: Customer expects call within 30 minutes!
 
@@ -306,23 +311,37 @@ Generated: ${new Date().toLocaleString()}
                           <form className="space-y-3" onSubmit={handleSubmit}>
                             <div>
                               <label className="block text-xs font-medium text-gray-700 mb-1">Full Name *</label>
-                              <input type="text" name="name" placeholder="Enter your full name" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800"/>
+                              <input type="text" name="name" placeholder="Enter your full name" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800 text-gray-900"/>
                             </div>
                             <div>
                               <label className="block text-xs font-medium text-gray-700 mb-1">Email Address *</label>
-                              <input type="email" name="email" placeholder="your.email@example.com" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800"/>
+                              <input type="email" name="email" placeholder="your.email@example.com" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800 text-gray-900"/>
                             </div>
                             <div>
                               <label className="block text-xs font-medium text-gray-700 mb-1">Phone Number *</label>
-                              <input type="tel" name="phone" placeholder="(___) ___-____" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800"/>
+                              <input type="tel" name="phone" placeholder="(___) ___-____" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800 text-gray-900"/>
                             </div>
                             <div>
                               <label className="block text-xs font-medium text-gray-700 mb-1">Moving From *</label>
-                              <input type="text" name="movingFrom" placeholder="Full address" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800"/>
+                              <input type="text" name="movingFrom" placeholder="Full address" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800 text-gray-900"/>
                             </div>
                             <div>
                               <label className="block text-xs font-medium text-gray-700 mb-1">Moving To *</label>
-                              <input type="text" name="movingTo" placeholder="Full address" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800"/>
+                              <input type="text" name="movingTo" placeholder="Full address" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800 text-gray-900"/>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-xs font-medium text-gray-700 mb-1">Preferred Date *</label>
+                                <input type="date" name="preferredDate" required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-gray-900"/>
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-gray-700 mb-1">Alternative Date</label>
+                                <input type="date" name="alternativeDate" className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-gray-900"/>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">Additional Notes</label>
+                              <textarea name="notes" placeholder="Any special requirements, access issues, or additional details..." rows={3} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 placeholder-gray-800 text-gray-900 resize-none"></textarea>
                             </div>
                             
                             <button
