@@ -251,7 +251,7 @@ Generated: ${new Date().toLocaleString()}
                     </p>
                 </div>
                 {/* Right Column - Floating Form Card */}
-                <div className="bg-white rounded-2xl shadow-2xl p-6 lg:p-8 border-2 sticky top-24 relative order-1 lg:order-2" style={{borderColor: '#C75B9B'}}>
+                <div className="bg-white rounded-2xl shadow-2xl p-6 lg:p-8 border-2 relative order-1 lg:order-2" style={{borderColor: '#C75B9B'}}>
                   {/* Decorative Hearts */}
                   <div className="absolute -top-5 -right-5 text-pink-300">
                     <span className="text-6xl opacity-70 transform rotate-12">&#10084;</span>
