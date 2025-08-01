@@ -230,15 +230,36 @@ Generated: ${new Date().toLocaleString()}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-16 items-start">
                 <div className="space-y-6 order-2 lg:order-1">
-                    <div className="rounded-2xl shadow-2xl p-2" style={{backgroundColor: '#C75B9B'}}>
-                      <Image
-                        src="/crew.jpg"
-                        alt="Lovesome Moving family team"
-                        width={600}
-                        height={450}
-                        className="rounded-xl object-cover w-full h-full"
-                        style={{objectPosition: 'center'}}
-                      />
+                    {/* Team Images Collage */}
+                    <div className="relative h-80 md:h-96">
+                      {/* Main larger image */}
+                      <div className="absolute top-0 left-0 w-3/5 h-3/4 rounded-2xl shadow-2xl p-2 transform -rotate-2 z-10" style={{backgroundColor: '#C75B9B'}}>
+                        <Image
+                          src="/crew.jpg"
+                          alt="Lovesome Moving family team"
+                          width={400}
+                          height={300}
+                          className="rounded-xl object-cover w-full h-full"
+                          style={{objectPosition: 'center'}}
+                        />
+                      </div>
+                      
+                      {/* Overlapping smaller image */}
+                      <div className="absolute bottom-0 right-0 w-3/5 h-3/4 rounded-2xl shadow-2xl p-2 transform rotate-3 z-20" style={{backgroundColor: '#C75B9B'}}>
+                        <Image
+                          src="/teamshot.jpg"
+                          alt="Lovesome Moving team in action"
+                          width={400}
+                          height={300}
+                          className="rounded-xl object-cover w-full h-full"
+                          style={{objectPosition: 'center'}}
+                        />
+                      </div>
+                      
+                      {/* Decorative heart accent */}
+                      <div className="absolute top-4 right-4 text-pink-200 z-30">
+                        <span className="text-4xl opacity-60 transform rotate-12">&#10084;</span>
+                      </div>
                     </div>
                     <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
                         Meet the team that makes your move stress-free.
