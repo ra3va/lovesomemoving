@@ -8,6 +8,13 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingHearts from "@/components/FloatingHearts";
 
+// Extend Window interface for gtag
+declare global {
+  interface Window {
+    gtag: (command: string, targetId: string, config?: Record<string, unknown>) => void;
+  }
+}
+
 // Quiz questions and options configuration
 const quizSteps = [
   {
@@ -59,11 +66,40 @@ export default function Home() {
       }
       return { ...prev, [key]: value };
     });
+
+    // Track quiz answer selection
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'quiz_answer_selected', {
+        event_category: 'Lead Form',
+        event_label: `${key}: ${value}`,
+        step: currentStep + 1,
+        question: quizSteps[currentStep].question
+      });
+    }
   };
 
   const nextStep = () => {
     if (currentStep < quizSteps.length) {
+      // Track quiz step completion
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'quiz_step_completed', {
+          event_category: 'Lead Form',
+          event_label: `Step ${currentStep + 1}: ${quizSteps[currentStep].question}`,
+          step: currentStep + 1
+        });
+      }
+      
       setCurrentStep(currentStep + 1);
+      
+      // Track when user reaches contact form
+      if (currentStep + 1 === quizSteps.length) {
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'contact_form_reached', {
+            event_category: 'Lead Form',
+            event_label: 'User reached final contact form step'
+          });
+        }
+      }
     }
   };
 
@@ -126,18 +162,60 @@ Generated: ${new Date().toLocaleString()}
     `);
 
     try {
+      // Track form submission attempt
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'form_submit_attempt', {
+          event_category: 'Lead Form',
+          event_label: 'Quote form submission started'
+        });
+      }
+
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         body: web3FormData
       });
 
       if (response.ok) {
+        // Track successful lead generation
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'generate_lead', {
+            event_category: 'Lead Form',
+            event_label: 'Quote form completed successfully',
+            value: 1,
+            currency: 'USD'
+          });
+          
+          // Track as conversion
+          window.gtag('event', 'conversion', {
+            send_to: 'G-RW09X3BCTM',
+            event_category: 'Lead Form',
+            event_label: 'Moving quote request submitted'
+          });
+        }
+        
         setIsCompleted(true);
       } else {
+        // Track form submission error
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'form_submit_error', {
+            event_category: 'Lead Form',
+            event_label: 'Quote form submission failed'
+          });
+        }
         alert('There was an error submitting your request. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
+      
+      // Track form submission error
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'form_submit_error', {
+          event_category: 'Lead Form',
+          event_label: 'Quote form submission error',
+          error_message: error instanceof Error ? error.message : 'Unknown error'
+        });
+      }
+      
       alert('There was an error submitting your request. Please try again.');
     }
   };
@@ -307,7 +385,18 @@ Generated: ${new Date().toLocaleString()}
                             {quizSteps[currentStep].options.map(option => (
                               <button
                                 key={option}
-                                onClick={() => handleAnswer(quizSteps[currentStep].key, option)}
+                                onClick={() => {
+                                  // Track quiz start on first interaction
+                                  if (currentStep === 0 && Object.keys(answers).length === 0) {
+                                    if (typeof window !== 'undefined' && window.gtag) {
+                                      window.gtag('event', 'quiz_started', {
+                                        event_category: 'Lead Form',
+                                        event_label: 'User started moving quote quiz'
+                                      });
+                                    }
+                                  }
+                                  handleAnswer(quizSteps[currentStep].key, option);
+                                }}
                                 className={`w-full text-left p-3 rounded-lg border-2 transition-all text-sm font-semibold ${
                                   (answers[quizSteps[currentStep].key] || []).includes(option) || answers[quizSteps[currentStep].key] === option
                                     ? 'text-white shadow-lg'
